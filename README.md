@@ -1,4 +1,4 @@
-Crypto
+Cryptofun
 ======
 
-** TODO: Add description **
+Practice problems
