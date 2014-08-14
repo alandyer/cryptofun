@@ -20,4 +20,33 @@ defmodule Crypto do
     1
   end
 
+  def isAlphaNum(string, rate) do
+    len = String.length(string)
+    hitCount = alphaNumCount(string)
+    hitCount / len >= rate
+  end
+
+  defp alphaNumCount(string) do
+    _alphaNumCount(string, 0)
+  end
+
+  defp _alphaNumCount("", acc) do
+    acc
+  end
+
+  defp _alphaNumCount(<<x::size(8), rest::binary>>, acc) when x >= ?a and x <= ?z do
+    _alphaNumCount(rest, acc + 1)
+  end
+
+  defp _alphaNumCount(<<x::size(8), rest::binary>>, acc) when x >= ?A and x <= ?Z do
+    _alphaNumCount(rest, acc + 1)
+  end
+
+  defp _alphaNumCount(<<x::size(8), rest::binary>>, acc) when x >= ?1 and x <= ?9 do
+    _alphaNumCount(rest, acc + 1)
+  end
+
+  defp _alphaNumCount(<<_x::size(8), rest::binary>>, acc) do
+    _alphaNumCount(rest, acc)
+  end
 end

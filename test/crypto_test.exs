@@ -13,4 +13,9 @@ defmodule CryptoTest do
     "746865206b696420646f6e277420706c6179" |> String.upcase
   end
 
+  test "that a bitstring contains 75% or more alphnum characters" do
+    assert Crypto.isAlphaNum("Hello, World!", 0.75) == :true
+    assert Crypto.isAlphaNum("++++1", 0.75) == :false
+  end
+
 end
