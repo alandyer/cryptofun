@@ -20,10 +20,21 @@ defmodule Crypto do
     1
   end
 
+  def decodeSingleCharXOR(str, char) do
+    chunkedstr = for <<x::size(8) <- str>>, do: <<x>>
+    (for chunk <- chunkedstr, do: Crypto.fixedXOR(chunk, char)) |> Enum.join
+  end
+
   def isAlphaNum(string, rate) do
     len = String.length(string)
     hitCount = alphaNumCount(string)
     hitCount / len >= rate
+  end
+
+  def alphaNumScore(string) do
+    len = String.length(string)
+    hitCount = alphaNumCount(string)
+    hitCount / len
   end
 
   defp alphaNumCount(string) do
@@ -43,6 +54,10 @@ defmodule Crypto do
   end
 
   defp _alphaNumCount(<<x::size(8), rest::binary>>, acc) when x >= ?1 and x <= ?9 do
+    _alphaNumCount(rest, acc + 1)
+  end
+
+  defp _alphaNumCount(<<x::size(8), rest::binary>>, acc) when x == ? or x == ?! do
     _alphaNumCount(rest, acc + 1)
   end
 

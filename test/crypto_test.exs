@@ -18,4 +18,12 @@ defmodule CryptoTest do
     assert Crypto.isAlphaNum("++++1", 0.75) == :false
   end
 
+  test "decoding a single byte XOR cipher" do
+    str = HexString.decode("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
+    scores = for m <- 0..255, do: {m, Crypto.decodeSingleCharXOR(str, <<m>>) |> Crypto.alphaNumScore}
+    {char, _score} = Enum.max_by(scores, fn({_, score}) -> score end)
+    assert "Cooking MC's like a pound of bacon"
+    == Crypto.decodeSingleCharXOR(str, <<char>>)
+  end
+
 end
