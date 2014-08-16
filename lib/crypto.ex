@@ -20,6 +20,11 @@ defmodule Crypto do
     1
   end
 
+  def getTopScoreXORDecode(string) do
+    scores = for m <- 0..255, do: {m, Crypto.decodeSingleCharXOR(string, <<m>>) |> Crypto.alphaNumScore}
+    {char, _score} = Enum.max_by(scores, fn({_, score}) -> score end)
+  end
+
   def decodeSingleCharXOR(str, char) do
     chunkedstr = for <<x::size(8) <- str>>, do: <<x>>
     (for chunk <- chunkedstr, do: Crypto.fixedXOR(chunk, char)) |> Enum.join
@@ -31,6 +36,10 @@ defmodule Crypto do
     hitCount / len >= rate
   end
 
+  def alphaNumScore("") do
+    0
+  end
+  
   def alphaNumScore(string) do
     len = String.length(string)
     hitCount = alphaNumCount(string)
