@@ -6,7 +6,7 @@ defmodule StatefulCycle do
   end
 
   def init(args) do
-    {:ok, {(for <<x::8 <- args>>, do: <<x>>), []}}
+    {:ok, {args, []}}
   end
 
   def next(pid) do

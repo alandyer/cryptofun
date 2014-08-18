@@ -30,14 +30,14 @@ defmodule CryptoTest do
     test_list = String.split(test_data, "\n")
     decoded_list = Enum.map(test_list, &HexString.decode/1)
     high_scores = for string <- decoded_list, do: {Crypto.getTopScoreXORDecode(string), string}
-    {{bestchar, _bestscore}, beststring} = Enum.max_by(high_scores, fn({{_, score}, string}) -> score end)
+    {{bestchar, _bestscore}, beststring} = Enum.max_by(high_scores, fn({{_, score}, _string}) -> score end)
     assert Crypto.decodeSingleCharXOR(beststring, <<bestchar>>)
     == "Now that the party is jumping\n"
   end
 
   test "repeating key XOR" do
     data = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
-    encrypted = Crypto.repeatingKeyXOR(data, "ICE")
+    encrypted = Crypto.repeatingKeyXOR(data, (for <<x::8 <- "ICE">>, do: <<x>>))
 
     assert "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f" |> String.upcase
     == HexString.encode(encrypted)
