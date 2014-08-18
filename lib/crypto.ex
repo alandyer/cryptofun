@@ -20,6 +20,11 @@ defmodule Crypto do
     1
   end
 
+  def repeatingKeyXOR(string, key) do
+    {:ok, pid} = StatefulCycle.start_link(key)
+    (for <<x::size(8) <- string>>, do: fixedXOR(<<x>>, StatefulCycle.next(pid))) |> Enum.join
+  end
+
   def getTopScoreXORDecode(string) do
     scores = for m <- 0..255, do: {m, Crypto.decodeSingleCharXOR(string, <<m>>) |> Crypto.alphaNumScore}
     {char, _score} = Enum.max_by(scores, fn({_, score}) -> score end)
@@ -39,7 +44,7 @@ defmodule Crypto do
   def alphaNumScore("") do
     0
   end
-  
+
   def alphaNumScore(string) do
     len = String.length(string)
     hitCount = alphaNumCount(string)
